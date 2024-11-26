@@ -1,40 +1,37 @@
 name: Resourcepack Zipper
-
 on:
   push:
     branches:
       - master  # Adjust this branch name if needed
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0 # A non-shallow repository clone is required
-
+    
     - name: Run PackSquash
       uses: ComunidadAylas/PackSquash-action@v4
       with:
         packsquash_version: latest # Uses the latest PackSquash release supported by the action
         shader_source_transformation_strategy: keep_as_is
-
+    
     - name: Create ZIP file
       run: |
         COMMIT_ID=$(git rev-parse --short HEAD)
         ZIP_NAME="RP.zip"
-        echo "ZIP_NAME=${ZIP_NAME}" >> $GITHUB_ENV
+        echo "ZIP_NAME=${ZIP_NAME}" >> "$GITHUB_ENV"
         zip -r "${ZIP_NAME}" .
-
+    
     - name: Upload ZIP artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: resource-pack-artifact
         path: ${{ env.ZIP_NAME }}
-
+    
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -45,7 +42,7 @@ jobs:
         release_name: Release ${{ github.sha }}
         draft: false
         prerelease: false
-
+    
     - name: Upload Release Artifact
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
