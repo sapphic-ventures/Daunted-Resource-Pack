@@ -35,7 +35,7 @@ jobs:
     - name: Create ZIP file
       run: |
         COMMIT_ID=$(git rev-parse --short HEAD)
-        ZIP_NAME="ResourcePack-${COMMIT_ID}.zip"
+        ZIP_NAME="silly-pack.zip"
         echo "ZIP_NAME=${ZIP_NAME}" >> "$GITHUB_ENV"
         zip -r "${ZIP_NAME}" . -x '.git/*'
         ls -lh "${ZIP_NAME}"
