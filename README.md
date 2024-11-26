@@ -1,1 +1,1 @@
-# OutdoorsMC Resource Pack
+# Daunted Resource Pack :3
