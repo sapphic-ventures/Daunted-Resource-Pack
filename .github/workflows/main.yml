@@ -2,43 +2,51 @@ name: Resourcepack Zipper
 on:
   push:
     branches:
-      - master  # Adjust this branch name if needed
+      - master
   workflow_dispatch:
 
 jobs:
   build:
     permissions:
       contents: write
-    strategy:
-      matrix:
-        runner: [self-hosted, ubuntu-latest]
-    runs-on: ${{ matrix.runner }}
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0 # A non-shallow repository clone is required
-    
+        fetch-depth: 0
+
+    - name: Check Repo Size
+      run: |
+        REPO_SIZE=$(du -sh . | cut -f1)
+        echo "Repository Size: $REPO_SIZE"
+        
+    - name: List Files
+      run: |
+        find . -type f | wc -l
+        du -ah . | sort -rh | head -20
+
     - name: Run PackSquash
       uses: ComunidadAylas/PackSquash-action@v4
       with:
-        packsquash_version: latest # Uses the latest PackSquash release supported by the action
+        packsquash_version: latest
         shader_source_transformation_strategy: keep_as_is
-    
+
     - name: Create ZIP file
       run: |
         COMMIT_ID=$(git rev-parse --short HEAD)
-        ZIP_NAME="RP.zip"
+        ZIP_NAME="ResourcePack-${COMMIT_ID}.zip"
         echo "ZIP_NAME=${ZIP_NAME}" >> "$GITHUB_ENV"
-        zip -r "${ZIP_NAME}" .
-    
+        zip -r "${ZIP_NAME}" . -x '.git/*'
+        ls -lh "${ZIP_NAME}"
+
     - name: Upload ZIP artifact
       uses: actions/upload-artifact@v4
       with:
-        name: resource-pack-artifact
+        name: resource-pack-${{ github.sha }}
         path: ${{ env.ZIP_NAME }}
-        overwrite: true
-    
+        compression-level: 0  # Disable compression to speed up upload
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -49,14 +57,13 @@ jobs:
         release_name: Release ${{ github.sha }}
         draft: false
         prerelease: false
-    
-    - name: Upload Release Artifact
+
+    - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
-      if: steps.create_release.outputs.upload_url != ''
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/${{ env.ZIP_NAME }}
+        asset_path: ${{ env.ZIP_NAME }}
         asset_name: ${{ env.ZIP_NAME }}
         asset_content_type: application/zip
