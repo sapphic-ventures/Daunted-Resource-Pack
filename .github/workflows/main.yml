@@ -7,9 +7,12 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        runner: [self-hosted, ubuntu-latest]
+    runs-on: ${{ matrix.runner }}
     permissions:
       contents: write
-    runs-on: self-hosted
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
