@@ -67,3 +67,14 @@ jobs:
         asset_path: ${{ env.ZIP_NAME }}
         asset_name: ${{ env.ZIP_NAME }}
         asset_content_type: application/zip
+        
+    - name: Commit and Push ZIP to repo
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git checkout -b release-branch
+        git add ${{ env.ZIP_NAME }}
+        git commit -m "Add ZIP file"
+        git push -u origin release-branch
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
