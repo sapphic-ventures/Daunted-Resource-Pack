@@ -1,49 +1,80 @@
 name: Resourcepack Zipper
-
 on:
   push:
     branches:
-      - main  # Adjust this branch name if needed
+      - master
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Check Repo Size
+      run: |
+        REPO_SIZE=$(du -sh . | cut -f1)
+        echo "Repository Size: $REPO_SIZE"
+        
+    - name: List Files
+      run: |
+        find . -type f | wc -l
+        du -ah . | sort -rh | head -20
+
+    - name: Run PackSquash
+      uses: ComunidadAylas/PackSquash-action@v4
+      with:
+        packsquash_version: latest
+        shader_source_transformation_strategy: keep_as_is
 
     - name: Create ZIP file
       run: |
         COMMIT_ID=$(git rev-parse --short HEAD)
-        ZIP_NAME="RP.zip"
-        echo "ZIP_NAME=${ZIP_NAME}" >> $GITHUB_ENV
-        zip -r "${ZIP_NAME}" .
+        ZIP_NAME="silly-pack.zip"
+        echo "ZIP_NAME=${ZIP_NAME}" >> "$GITHUB_ENV"
+        zip -r "${ZIP_NAME}" . -x '.git/*'
+        ls -lh "${ZIP_NAME}"
 
     - name: Upload ZIP artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
-        name: resource-pack-artifact
+        name: resource-pack-${{ github.sha }}
         path: ${{ env.ZIP_NAME }}
+        compression-level: 0  # Disable compression to speed up upload
 
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
       with:
-        tag_name: release-${{ github.sha }}
-        release_name: Release ${{ github.sha }}
+        tag_name: release-${{ github.sha }}-${{ github.run_id }}
+        release_name: Silly Pack
         draft: false
         prerelease: false
 
-    - name: Upload Release Artifact
-      id: upload-release-asset
+    - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/${{ env.ZIP_NAME }}
+        asset_path: ${{ env.ZIP_NAME }}
         asset_name: ${{ env.ZIP_NAME }}
         asset_content_type: application/zip
+        
+    - name: Commit and Push ZIP to repo
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git checkout -b release-branch
+        git add ${{ env.ZIP_NAME }}
+        git commit -m "Add ZIP file"
+        git push -u origin release-branch
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
