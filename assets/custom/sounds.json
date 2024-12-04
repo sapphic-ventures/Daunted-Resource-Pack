@@ -51,6 +51,12 @@
     "sounds": [
       "custom:lock"
     ]
+  },
+
+  "sussy_kill": {
+    "sounds": [
+      "custom:sussy_kill"
+    ]
   }
 
 }
