@@ -83,6 +83,12 @@
     ]
   },
 
+  "ui_click_light": {
+    "sounds": [
+      "custom:ui_click_light"
+    ]
+  },
+
   "ui_click_click": {
     "sounds": [
       "custom:ui_click_click"
