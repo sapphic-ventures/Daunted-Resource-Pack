@@ -53,6 +53,54 @@
     ]
   },
 
+  "sussy_kill": {
+    "sounds": [
+      "custom:sussy_kill"
+    ]
+  },
+
+  "cinematic_whoosh": {
+    "sounds": [
+      "custom:cinematic_whoosh"
+    ]
+  },
+
+  "coin_ching": {
+    "sounds": [
+      "custom:coin_ching"
+    ]
+  },
+
+  "level_up": {
+    "sounds": [
+      "custom:level_up"
+    ]
+  },
+
+  "ui_click": {
+    "sounds": [
+      "custom:ui_click"
+    ]
+  },
+
+  "ui_click_light": {
+    "sounds": [
+      "custom:ui_click_light"
+    ]
+  },
+
+  "ui_click_click": {
+    "sounds": [
+      "custom:ui_click_click"
+    ]
+  },
+
+  "ui_dun_dun": {
+    "sounds": [
+      "custom:ui_dun_dun"
+    ]
+  },
+
   "womp_womp": {
     "sounds": [
       "custom:womp_womp"
