@@ -51,6 +51,11 @@
     "sounds": [
       "custom:lock"
     ]
-  }
+  },
 
+  "womp_womp": {
+    "sounds": [
+      "custom:womp_womp"
+    ]
+  }
 }
