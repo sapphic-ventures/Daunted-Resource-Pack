@@ -99,5 +99,11 @@
     "sounds": [
       "custom:ui_dun_dun"
     ]
+  },
+
+  "womp_womp": {
+    "sounds": [
+      "custom:womp_womp"
+    ]
   }
 }
