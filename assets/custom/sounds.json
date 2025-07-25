@@ -105,5 +105,17 @@
     "sounds": [
       "custom:womp_womp"
     ]
+  },
+
+  "scary_short": {
+    "sounds": [
+      "custom:scary_short"
+    ]
+  },
+
+  "scary_long": {
+    "sounds": [
+      "custom:scary_long"
+    ]
   }
 }
