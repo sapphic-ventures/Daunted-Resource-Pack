@@ -79,6 +79,15 @@
     "chars": [
       "\uE008"
     ]
+  },
+  {
+    "type": "bitmap",
+    "file": "minecraft:font/symbols/discord.png",
+    "ascent": 7,
+    "height": 7,
+    "chars": [
+      "\uE100"
+    ]
   }
 ]
 }
