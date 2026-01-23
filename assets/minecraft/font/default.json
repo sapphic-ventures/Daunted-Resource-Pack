@@ -82,6 +82,15 @@
   },
   {
     "type": "bitmap",
+    "file": "minecraft:font/ranks/mod.png",
+    "ascent": 7,
+    "height": 7,
+    "chars": [
+      "\uE009"
+    ]
+  },
+  {
+    "type": "bitmap",
     "file": "minecraft:font/symbols/discord.png",
     "ascent": 7,
     "height": 7,
